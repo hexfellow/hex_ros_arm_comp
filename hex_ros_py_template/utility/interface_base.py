@@ -7,8 +7,6 @@
 ################################################################
 
 import json
-import queue
-import typing
 from collections import deque
 from typing import Any, Optional
 from abc import ABC, abstractmethod
@@ -31,7 +29,10 @@ class InterfaceBase(ABC):
         print(f"#### InterfaceBase init: {self._name} ####")
 
     def __del__(self):
-        self.shutdown()
+        try:
+            self.shutdown()
+        except Exception:
+            pass
 
     @abstractmethod
     def ok(self) -> bool:

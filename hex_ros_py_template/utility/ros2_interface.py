@@ -31,11 +31,11 @@ class DataInterface(InterfaceBase):
 
         ### pamameter
         # declare parameters
-        self.__node.declare_parameter('str_name', "unknown")
+        self.__node.declare_parameter('str_prefix', "")
         self.__node.declare_parameter('int_range', [-1_000_000, 1_000_000])
         # str
         self._str_param = {
-            "name": self.__node.get_parameter('str_name').value,
+            "prefix": self.__node.get_parameter('str_prefix').value,
         }
         # int
         self._int_param = {
@@ -71,6 +71,7 @@ class DataInterface(InterfaceBase):
         self.__in_int_sub
 
         ### spin thread
+        self.__shutting_down = False
         self.__spin_thread = threading.Thread(target=self.__spin)
         self.__spin_thread.start()
 
@@ -78,14 +79,26 @@ class DataInterface(InterfaceBase):
         print(f"#### DataInterface init: {self._name} ####")
 
     def __spin(self):
-        rclpy.spin(self.__node)
+        try:
+            rclpy.spin(self.__node)
+        except rclpy.executors.ExternalShutdownException:
+            pass
 
     def ok(self):
         return rclpy.ok()
 
     def shutdown(self):
-        self.__node.destroy_node()
-        rclpy.shutdown()
+        if self.__shutting_down:
+            return
+        self.__shutting_down = True
+        try:
+            self.__node.destroy_node()
+        except Exception:
+            pass
+        try:
+            rclpy.shutdown()
+        except Exception:
+            pass
         self.__spin_thread.join()
 
     def sleep(self):

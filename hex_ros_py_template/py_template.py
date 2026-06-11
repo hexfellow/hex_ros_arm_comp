@@ -14,17 +14,17 @@ sys.path.append(scrpit_path)
 from utility import DataInterface
 
 
-class PythonTemplate:
+class PyTemplate:
 
     def __init__(self):
         ### utility
-        self.__data_interface = DataInterface("template")
+        self.__data_interface = DataInterface("py_template")
 
         ### parameters
         self.__str_param = self.__data_interface.get_str_param()
         self.__int_param = self.__data_interface.get_int_param()
-        print(f"str_param:\n{self.__str_param}")
-        print(f"int_param:\n{self.__int_param}")
+        print(f"str_param: {self.__str_param}")
+        print(f"int_param: {self.__int_param}")
 
         ### variables
         self.__out_str = None
@@ -38,7 +38,7 @@ class PythonTemplate:
                 print(f"in_str: {in_str}")
                 total_str += in_str
             if total_str != "":
-                self.__out_str = f"{self.__str_param['name']}: {total_str}"
+                self.__out_str = f"{self.__str_param['prefix']}: {total_str}"
 
             for in_int in iter(self.__data_interface.get_in_int, None):
                 print(f"in_int: {in_int}")
@@ -59,8 +59,11 @@ class PythonTemplate:
 
 
 def main():
-    template = PythonTemplate()
-    template.run()
+    py_template = PyTemplate()
+    try:
+        py_template.run()
+    except KeyboardInterrupt:
+        pass
 
 
 if __name__ == '__main__':

@@ -32,13 +32,13 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='root',
-    maintainer_email='847235539@qq.com',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    maintainer='Dong Zhaorui',
+    maintainer_email='dzr159@gmail.com',
+    description='A template for writing python ROS packages',
+    license='Apache-2.0',
     entry_points={
         'console_scripts': [
-            'template = hex_ros_py_template.template:main',
+            'py_template = hex_ros_py_template.py_template:main',
         ],
     },
 )

@@ -2,7 +2,7 @@
 rate_ros: 300.0
 
 # str
-str_name: "HexHello! You said:"
+str_prefix: "HexHello! You said:"
 
 # int
 int_range: [0, 1000]

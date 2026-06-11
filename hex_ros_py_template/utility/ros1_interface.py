@@ -26,7 +26,7 @@ class DataInterface(InterfaceBase):
 
         ### pamameter
         self._str_param = {
-            "name": rospy.get_param('~str_name', "unknown"),
+            "prefix": rospy.get_param('~str_prefix', ""),
         }
         self._int_param = {
             "range": rospy.get_param('~int_range', [-1_000_000, 1_000_000]),

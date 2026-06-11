@@ -98,16 +98,16 @@ Follow these steps to set up the project for development and testing on your loc
 
 ### Usage
 
-1. Launch the `template` node:
+1. Launch the `py_template` node:
 
    For ROS 1:
    ```shell
-   roslaunch hex_ros_py_template template.launch
+   roslaunch hex_ros_py_template py_template.launch
    ```
 
    For ROS 2:
    ```shell
-   ros2 launch hex_ros_py_template template.launch.py
+   ros2 launch hex_ros_py_template py_template.launch.py
    ```
 
 2. Publish to `/in_str` and `/in_int` topics.

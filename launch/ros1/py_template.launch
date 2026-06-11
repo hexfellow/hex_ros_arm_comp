@@ -6,7 +6,7 @@
 <!--#######################################-->
 
 <launch> 
-    <node name="template" pkg="hex_ros_py_template" type="template.py" output="screen" >
+    <node name="py_template" pkg="hex_ros_py_template" type="py_template.py" output="screen" >
         # parameter
         <rosparam file="$(find hex_ros_py_template)/config/ros1/params.yaml"/>
         # subscribe
