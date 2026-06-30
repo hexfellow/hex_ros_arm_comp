@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 ################################################################
-# Copyright 2024 Dong Zhaorui. All rights reserved.
+# Copyright 2026 Dong Zhaorui. All rights reserved.
 # Author: Dong Zhaorui 847235539@qq.com
-# Date  : 2024-09-05
+# Date  : 2026-06-30
 ################################################################
 
-import json
 from collections import deque
 from typing import Any, Optional
 from abc import ABC, abstractmethod
+
+from hex_util_msg.dataclass.dataclass_robo import HexDcRoboManipCtrl
+from hex_util_msg.dataclass.dataclass_robo import HexDcRoboManipStateStamped
+from hex_util_msg.dataclass.dataclass_teleop import HexDcTeleopKeyboardState
 
 
 class InterfaceBase(ABC):
@@ -17,12 +20,12 @@ class InterfaceBase(ABC):
     def __init__(self, name: str = "unknown"):
         ### ros parameters
         self._rate_param = {}
-        self._str_param = {}
-        self._int_param = {}
+        self._model_param = {}
+        self._comp_param = {}
 
         ### rx msg queues
-        self._in_str_deque = deque()
-        self._in_int_deque = deque()
+        self._manip_state_deque = deque(maxlen=100)
+        self._keyboard_deque = deque(maxlen=100)
 
         ### name
         self._name = name
@@ -72,32 +75,21 @@ class InterfaceBase(ABC):
     ####################
     ### parameters
     ####################
-    def _str_to_list(self, list_str: list) -> list:
-        result = []
-        for s in list_str:
-            l = json.loads(s)
-            result.append(l)
-        return result
-
     def get_rate_param(self) -> dict:
         return self._rate_param
 
-    def get_str_param(self) -> dict:
-        return self._str_param
+    def get_model_param(self) -> dict:
+        return self._model_param
 
-    def get_int_param(self) -> dict:
-        return self._int_param
+    def get_comp_param(self) -> dict:
+        return self._comp_param
 
     ####################
     ### publishers
     ####################
     @abstractmethod
-    def pub_out_str(self, out: str):
-        raise NotImplementedError("InterfaceBase.pub_out_str")
-
-    @abstractmethod
-    def pub_out_int(self, out: int):
-        raise NotImplementedError("InterfaceBase.pub_out_int")
+    def pub_manip_ctrl(self, out: HexDcRoboManipCtrl):
+        raise NotImplementedError("InterfaceBase.pub_manip_ctrl")
 
     ####################
     ### subscribers
@@ -110,14 +102,23 @@ class InterfaceBase(ABC):
             else:
                 return None
         else:
-            ret = dq[-1]
-            dq.clear()
-            return ret
+            if dq:
+                ret = dq[-1]
+                dq.clear()
+                return ret
+            else:
+                return None
 
-    # in str
-    def get_in_str(self, latest: bool = False) -> Optional[str]:
-        return self.deque_helper(self._in_str_deque, latest)
+    # manip state
+    def get_manip_state(
+        self,
+        latest: bool = False,
+    ) -> Optional[HexDcRoboManipStateStamped]:
+        return self.deque_helper(self._manip_state_deque, latest)
 
-    # in int
-    def get_in_int(self, latest: bool = False) -> Optional[int]:
-        return self.deque_helper(self._in_int_deque, latest)
+    # keyboard state
+    def get_keyboard_state(
+        self,
+        latest: bool = False,
+    ) -> Optional[HexDcTeleopKeyboardState]:
+        return self.deque_helper(self._keyboard_deque, latest)
